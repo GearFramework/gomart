@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-func ListWithdrawals(ctx *gin.Context, api types.ApiFunc) {
+func ListWithdrawals(ctx *gin.Context, api types.APIFunc) {
 	data := types.NewRequest(ctx)
 	resp, err := api(data)
 	if err != nil {

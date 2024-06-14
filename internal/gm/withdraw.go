@@ -36,7 +36,7 @@ func (gm *GopherMartApp) NewWithdraw(number string, customerID int64, sum float3
 	}
 	return &types.Withdraw{
 		Number:      number,
-		CustomerId:  customerID,
+		CustomerID:  customerID,
 		Sum:         sum,
 		ProcessedAt: processedAt.In(loc).Format(time.RFC3339),
 	}
@@ -69,19 +69,22 @@ func (gm *GopherMartApp) AppendWithdraw(ctx context.Context, withdraw *types.Wit
 }
 
 func (gm *GopherMartApp) InsertWithdraw(ctx context.Context, withdraw *types.Withdraw) error {
-	if _, err := gm.Storage.Insert(ctx, sqlInsertWithdraw, withdraw.Number, withdraw.CustomerId, withdraw.Sum); err != nil {
+	if _, err := gm.Storage.Insert(ctx, sqlInsertWithdraw, withdraw.Number, withdraw.CustomerID, withdraw.Sum); err != nil {
 		return err
 	}
 	return nil
 }
 
 func (gm *GopherMartApp) UpdateCustomerWithdraw(ctx context.Context, withdraw *types.Withdraw) error {
-	return gm.Storage.Update(ctx, sqlUpdateCustomerWithdraw, withdraw.Sum, withdraw.CustomerId)
+	return gm.Storage.Update(ctx, sqlUpdateCustomerWithdraw, withdraw.Sum, withdraw.CustomerID)
 }
 
 func (gm *GopherMartApp) GetCustomerWithdrawals(ctx context.Context, customerID int64) ([]types.Withdraw, error) {
 	rows, err := gm.Storage.Find(ctx, sqlGetCustomerWithdrawals, customerID)
-	defer rows.Close()
+	defer func() {
+		err := rows.Close()
+		gm.logger.Error(err.Error())
+	}()
 	if err != nil {
 		return nil, err
 	}

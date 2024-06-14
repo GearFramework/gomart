@@ -9,14 +9,14 @@ import (
 	"strings"
 )
 
-func RegisterCustomer(ctx *gin.Context, api types.ApiFunc) {
+func RegisterCustomer(ctx *gin.Context, api types.APIFunc) {
 	defer ctx.Request.Body.Close()
 	if !strings.Contains(ctx.Request.Header.Get("Content-Type"), "application/json") {
 		ctx.Status(http.StatusBadRequest)
 		return
 	}
 	data := types.CustomerRegisterRequest{
-		ApiRequest: types.NewRequest(ctx),
+		APIRequest: types.NewRequest(ctx),
 	}
 	if err := json.NewDecoder(ctx.Request.Body).Decode(&data); err != nil {
 		ctx.AbortWithStatus(http.StatusBadRequest)

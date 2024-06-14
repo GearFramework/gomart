@@ -70,7 +70,7 @@ func (gm *GopherMartApp) AddOrder(r types.AddOrderRequest) (types.Response, erro
 		gm.logger.Errorf("invalid customer: %d", customerID)
 		return nil, err
 	}
-	if isValidOrderNumber(r.OrderNumber) == false {
+	if !isValidOrderNumber(r.OrderNumber) {
 		gm.logger.Errorf("invalid form data: %s", types.ErrInvalidOrderNumber.Error())
 		return nil, types.ErrInvalidOrderNumber
 	}
@@ -120,7 +120,7 @@ func isValidOrderNumber(num string) bool {
 	return (sum % 10) == 0
 }
 
-func (gm *GopherMartApp) ListOrders(r types.ApiRequest) (types.Response, error) {
+func (gm *GopherMartApp) ListOrders(r types.APIRequest) (types.Response, error) {
 	customerID, err := gm.Auth.AuthCustomer(r.GetCtx())
 	if err != nil {
 		return nil, err
@@ -132,7 +132,7 @@ func (gm *GopherMartApp) ListOrders(r types.ApiRequest) (types.Response, error) 
 	return orders, nil
 }
 
-func (gm *GopherMartApp) GetBalance(r types.ApiRequest) (types.Response, error) {
+func (gm *GopherMartApp) GetBalance(r types.APIRequest) (types.Response, error) {
 	customerID, err := gm.Auth.AuthCustomer(r.GetCtx())
 	if err != nil {
 		return nil, err
@@ -144,7 +144,7 @@ func (gm *GopherMartApp) GetBalance(r types.ApiRequest) (types.Response, error) 
 	return &types.CustomerBalanceResponse{Balance: customer.Balance, Withdraw: customer.Withdraw}, nil
 }
 
-func (gm *GopherMartApp) ListWithdrawals(r types.ApiRequest) (types.Response, error) {
+func (gm *GopherMartApp) ListWithdrawals(r types.APIRequest) (types.Response, error) {
 	customerID, err := gm.Auth.AuthCustomer(r.GetCtx())
 	if err != nil {
 		return nil, err
@@ -169,7 +169,7 @@ func (gm *GopherMartApp) Withdraw(r types.CustomerWithdrawRequest) (types.Respon
 		gm.logger.Errorf("error customer points %.02f but requested %.02f", customer.Withdraw, r.Sum)
 		return nil, types.ErrNotEnoughPoints
 	}
-	if isValidOrderNumber(r.Order) == false {
+	if !isValidOrderNumber(r.Order) {
 		gm.logger.Errorf("invalid requested order %s", r.Order)
 		return nil, types.ErrInvalidOrderNumber
 	}

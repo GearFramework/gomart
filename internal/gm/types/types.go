@@ -24,29 +24,29 @@ type Requester interface {
 	GetCtx() *gin.Context
 }
 
-type ApiRequest struct {
+type APIRequest struct {
 	ctx *gin.Context `json:"-"`
 }
 
 type CustomerRegisterRequest struct {
-	ApiRequest
+	APIRequest
 	Login    string `json:"login"`
 	Password string `json:"password"`
 }
 
 type CustomerLoginRequest struct {
-	ApiRequest
+	APIRequest
 	Login    string `json:"login"`
 	Password string `json:"password"`
 }
 
 type AddOrderRequest struct {
-	ApiRequest
+	APIRequest
 	OrderNumber string
 }
 
 type CustomerWithdrawRequest struct {
-	ApiRequest
+	APIRequest
 	Order string  `json:"order"`
 	Sum   float32 `json:"sum"`
 }
@@ -56,19 +56,19 @@ type CustomerBalanceResponse struct {
 	Withdraw float32 `json:"withdraw"`
 }
 
-type ApiFunc func(Requester) (Response, error)
+type APIFunc func(Requester) (Response, error)
 
-func NewRequest(ctx *gin.Context) ApiRequest {
-	return ApiRequest{ctx: ctx}
+func NewRequest(ctx *gin.Context) APIRequest {
+	return APIRequest{ctx: ctx}
 }
 
-func (r ApiRequest) GetCtx() *gin.Context {
+func (r APIRequest) GetCtx() *gin.Context {
 	return r.ctx
 }
 
 type Order struct {
 	Number     string  `db:"number" json:"number"`
-	CustomerId int64   `db:"customer_id" json:"-"`
+	CustomerID int64   `db:"customer_id" json:"-"`
 	Status     string  `db:"status" json:"status"`
 	Accrual    float32 `db:"accrual" json:"accrual"`
 	UploadedAt string  `db:"uploaded_at" json:"uploaded_at"`
@@ -76,7 +76,7 @@ type Order struct {
 
 type Withdraw struct {
 	Number      string  `db:"number" json:"order"`
-	CustomerId  int64   `db:"customer_id" json:"-"`
+	CustomerID  int64   `db:"customer_id" json:"-"`
 	Sum         float32 `db:"sum" json:"sum"`
 	ProcessedAt string  `db:"processed_at" json:"processed_at"`
 }

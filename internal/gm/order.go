@@ -38,7 +38,7 @@ func (gm *GopherMartApp) NewOrder(number string, customerID int64, status string
 	}
 	return &types.Order{
 		Number:     number,
-		CustomerId: customerID,
+		CustomerID: customerID,
 		Accrual:    accrual,
 		Status:     status,
 		UploadedAt: uploadedAt.In(loc).Format(time.RFC3339),
@@ -75,7 +75,7 @@ func (gm *GopherMartApp) AppendNewOrder(ctx context.Context, customer *Customer,
 }
 
 func (gm *GopherMartApp) InsertOrder(ctx context.Context, order *types.Order) error {
-	if _, err := gm.Storage.Insert(ctx, sqlInsertOrder, order.Number, order.CustomerId, order.Accrual); err != nil {
+	if _, err := gm.Storage.Insert(ctx, sqlInsertOrder, order.Number, order.CustomerID, order.Accrual); err != nil {
 		return err
 	}
 	return nil
@@ -96,7 +96,7 @@ func (gm *GopherMartApp) CheckExistsOrder(ctx context.Context, number string, cu
 		fmt.Println(err.Error())
 		return nil
 	}
-	if customer.Id != order.CustomerId {
+	if customer.Id != order.CustomerID {
 		return types.ErrOrderAnotherCustomer
 	}
 	return types.ErrOrderAlreadyExists
@@ -104,7 +104,10 @@ func (gm *GopherMartApp) CheckExistsOrder(ctx context.Context, number string, cu
 
 func (gm *GopherMartApp) GetCustomerOrders(ctx context.Context, customerID int64) ([]types.Order, error) {
 	rows, err := gm.Storage.Find(ctx, sqlGetCustomerOrders, customerID)
-	defer rows.Close()
+	defer func() {
+		err := rows.Close()
+		gm.logger.Error(err.Error())
+	}()
 	if err != nil {
 		return nil, err
 	}

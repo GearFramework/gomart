@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-type HttpServer struct {
+type HTTPServer struct {
 	HTTP   *http.Server
 	Router *gin.Engine
 	Logger *zap.SugaredLogger
@@ -16,26 +16,26 @@ type HttpServer struct {
 
 type MiddlewareFunc func() gin.HandlerFunc
 
-func NewServer(conf *Config) *HttpServer {
+func NewServer(conf *Config) *HTTPServer {
 	gin.SetMode(gin.ReleaseMode)
-	return &HttpServer{
+	return &HTTPServer{
 		Config: conf,
 		Logger: alog.NewLogger("Server " + conf.Addr),
 		Router: gin.New(),
 	}
 }
 
-func (serv *HttpServer) SetMiddleware(mw MiddlewareFunc) *HttpServer {
+func (serv *HTTPServer) SetMiddleware(mw MiddlewareFunc) *HTTPServer {
 	serv.Router.Use(mw())
 	return serv
 }
 
-func (serv *HttpServer) Init(initRoutes func()) error {
+func (serv *HTTPServer) Init(initRoutes func()) error {
 	initRoutes()
 	return nil
 }
 
-func (serv *HttpServer) Up() error {
+func (serv *HTTPServer) Up() error {
 	serv.HTTP = &http.Server{
 		Addr:    serv.Config.Addr,
 		Handler: serv.Router,

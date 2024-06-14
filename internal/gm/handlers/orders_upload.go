@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-func AddOrder(ctx *gin.Context, api types.ApiFunc) {
+func AddOrder(ctx *gin.Context, api types.APIFunc) {
 	defer ctx.Request.Body.Close()
 	if !strings.Contains(ctx.Request.Header.Get("Content-Type"), "text/plain") {
 		ctx.Status(http.StatusBadRequest)
@@ -21,7 +21,7 @@ func AddOrder(ctx *gin.Context, api types.ApiFunc) {
 		return
 	}
 	data := types.AddOrderRequest{
-		ApiRequest:  types.NewRequest(ctx),
+		APIRequest:  types.NewRequest(ctx),
 		OrderNumber: string(body),
 	}
 	_, err = api(data)

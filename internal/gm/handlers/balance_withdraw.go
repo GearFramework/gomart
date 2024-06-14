@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-func Withdraw(ctx *gin.Context, api types.ApiFunc) {
+func Withdraw(ctx *gin.Context, api types.APIFunc) {
 	defer ctx.Request.Body.Close()
 	if !strings.Contains(ctx.Request.Header.Get("Content-Type"), "application/json") {
 		fmt.Println("invalid request type")
@@ -18,7 +18,7 @@ func Withdraw(ctx *gin.Context, api types.ApiFunc) {
 		return
 	}
 	data := types.CustomerWithdrawRequest{
-		ApiRequest: types.NewRequest(ctx),
+		APIRequest: types.NewRequest(ctx),
 	}
 	if err := json.NewDecoder(ctx.Request.Body).Decode(&data); err != nil {
 		fmt.Println("error decoded json request;", err.Error())

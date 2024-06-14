@@ -24,12 +24,12 @@ func (gm *GopherMartApp) initRoutes() {
 	})
 	gm.Server.Router.GET("/api/user/orders", func(ctx *gin.Context) {
 		handlers.ListOrders(ctx, func(r types.Requester) (types.Response, error) {
-			return gm.ListOrders(r.(types.ApiRequest))
+			return gm.ListOrders(r.(types.APIRequest))
 		})
 	})
 	gm.Server.Router.GET("/api/user/balance", func(ctx *gin.Context) {
 		handlers.GetBalance(ctx, func(r types.Requester) (types.Response, error) {
-			return gm.GetBalance(r.(types.ApiRequest))
+			return gm.GetBalance(r.(types.APIRequest))
 		})
 	})
 	gm.Server.Router.POST("/api/user/balance/withdraw", func(ctx *gin.Context) {
@@ -39,7 +39,7 @@ func (gm *GopherMartApp) initRoutes() {
 	})
 	gm.Server.Router.GET("/api/user/withdrawals", func(ctx *gin.Context) {
 		handlers.ListWithdrawals(ctx, func(r types.Requester) (types.Response, error) {
-			return gm.ListWithdrawals(r.(types.ApiRequest))
+			return gm.ListWithdrawals(r.(types.APIRequest))
 		})
 	})
 	gm.Server.Router.GET("/ping", func(ctx *gin.Context) {

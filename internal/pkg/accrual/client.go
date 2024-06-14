@@ -80,7 +80,7 @@ func checkCalcResponse(w *http.Response) error {
 	} else if w.StatusCode != http.StatusOK {
 		return ErrInternalError
 	}
-	if strings.Contains(w.Header.Get("Content-Type"), "application/json") == false {
+	if !strings.Contains(w.Header.Get("Content-Type"), "application/json") {
 		return ErrInvalidContentType
 	}
 	return nil

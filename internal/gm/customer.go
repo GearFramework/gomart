@@ -83,7 +83,7 @@ func (gm *GopherMartApp) GetCustomer(data types.CustomerLoginRequest) (*Customer
 		gm.logger.Error(err.Error())
 		return nil, types.ErrCustomerNotFound
 	}
-	if checkHashPassword(customer.Password, data.Password) == false {
+	if !checkHashPassword(customer.Password, data.Password) {
 		return nil, types.ErrCustomerLogin
 	}
 	return &customer, nil
