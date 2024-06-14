@@ -47,6 +47,7 @@ type Customer struct {
 	Withdraw float32 `db:"withdraw" json:"withdrawn"`
 }
 
+// CreateCustomer создание клиента
 func (gm *GopherMartApp) CreateCustomer(data types.CustomerRegisterRequest) (int64, error) {
 	hash, err := createHashPassword(data.Password)
 	if err != nil {
